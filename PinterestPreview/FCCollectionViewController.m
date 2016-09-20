@@ -28,7 +28,9 @@ static NSString * const reuseIdentifier = @"FCCollectionViewCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Register cell classes
-   [self.collectionView registerClass:[FCCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
+#warning Вот эта строка не нужна, потому что у тебя FCCollectionViewCell есть в сториборде, он уже зарегистрирован для self.collectionView
+    
+   //[self.collectionView registerClass:[FCCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
     
     // Set the PinterestLayout delegate
@@ -79,6 +81,7 @@ static NSString * const reuseIdentifier = @"FCCollectionViewCell";
     
     
     // Configure the cell
+#warning Из-за неверной строки во viewDidLoad cell.imageView возвращает nil, так как свойство не инитится по умолчанию. А вот при использовании xib, средства SDK автоматически генерируют свойства, у который есть IBOutlet и проставлена связь на сториборде.
     UIImageView *recipeImageView = cell.imageView;
     recipeImageView = [cell viewWithTag:100];
     FCImage* viewingElement = self.recipeImages[indexPath.row];
@@ -96,6 +99,8 @@ static NSString * const reuseIdentifier = @"FCCollectionViewCell";
                            AtIndexPath : (NSIndexPath*) indexPath
                               WithWidth: (CGFloat) width
 {
+#warning Пользоваться методом dequeueReusableCellWithReuseIdentifier где-то, кроме метода collectionView:cellForItemAtIndexPath: не стоит, может действетельно получаться рекурсия.
+#warning у тебя есть size в метаинфе ответа от сервера. Попробуй использовать её.
     /*
     FCCollectionViewCell *cell = (FCCollectionViewCell*)[collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
